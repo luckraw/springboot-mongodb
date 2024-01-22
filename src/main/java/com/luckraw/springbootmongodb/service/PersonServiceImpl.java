@@ -82,14 +82,21 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public List<Document> getOldestPersonByCity() {
-        UnwindOperation unwindOperation = Aggregation.unwind("addresses");
+        UnwindOperation unwindOperation
+                = Aggregation.unwind("addresses");
 
-        SortOperation sortOperation = Aggregation.sort(Sort.Direction.DESC,"age");
-        GroupOperation groupOperation = Aggregation.group("addresses.city").first(Aggregation.ROOT).as("oldestPerson");
+        SortOperation sortOperation
+                = Aggregation.sort(Sort.Direction.DESC,"age");
+        GroupOperation groupOperation
+                = Aggregation.group("addresses.city")
+                .first(Aggregation.ROOT)
+                .as("oldestPerson");
 
-        Aggregation aggregation = Aggregation.newAggregation(unwindOperation,sortOperation,groupOperation);
+        Aggregation aggregation
+                = Aggregation.newAggregation(unwindOperation,sortOperation,groupOperation);
 
-        List<Document> person = mongoTemplate.aggregate(aggregation, Person.class, Document.class).getMappedResults();
+        List<Document> person
+                = mongoTemplate.aggregate(aggregation, Person.class, Document.class).getMappedResults();
 
         return person;
     }
